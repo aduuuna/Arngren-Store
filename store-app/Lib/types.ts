@@ -1,4 +1,3 @@
-import { totalmem } from "os";
 
 export interface Product {
   id: string;
