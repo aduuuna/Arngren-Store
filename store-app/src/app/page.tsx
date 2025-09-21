@@ -1,9 +1,21 @@
+"use client";
+
+console.log('🏁 Homepage loaded!');
+
 import Link from 'next/link';
 import ProductCard from '../../components/ProductCard';
 import { products, categories } from '../../Lib/products';
+import { useEffect } from 'react';
 
 export default function HomePage() {
+
+  useEffect(() => {
+    console.log('🎉 useEffect in homepage running!');
+  }, []);
+  
   const featuredProducts = products.slice(0, 6);
+
+  
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">

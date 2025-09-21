@@ -8,19 +8,30 @@ import { CartManager } from '../../../../Lib/cart';
 import { Product } from '../../../../Lib/types';
 
 interface ProductPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export default function ProductPage({ params }: ProductPageProps) {
   const [product, setProduct] = useState<Product | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
+  const [resolvedParams, setResolvedParams] = useState<{ id: string } | null>(null);
 
   useEffect(() => {
-    const foundProduct = getProductById(params.id);
-    setProduct(foundProduct || null);
-    setIsLoading(false);
-  }, [params.id]);
+    const resolveParams = async () => {
+      const resolved = await params;
+      setResolvedParams(resolved);
+    };
+    resolveParams();
+  }, [params]);
+
+  useEffect(() => {
+    if (resolvedParams) {
+      const foundProduct = getProductById(resolvedParams.id);
+      setProduct(foundProduct || null);
+      setIsLoading(false);
+    }
+  }, [resolvedParams]);
 
   if (isLoading) {
     return <div className="max-w-7xl mx-auto px-4 py-8">Loading...</div>;

@@ -5,15 +5,28 @@ import { useState, useEffect } from 'react';
 import { CartManager } from "../Lib/cart";
 import { categories } from '../Lib/products';
 
+console.log('🏠 Navbar component loaded!');
+
 export default function Navbar() {
   const [cartCount, setCartCount] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
-    const cart = CartManager.getInstance();
-    const updateCartCount = () => setCartCount(cart.getItemCount());
+    console.log('Navbar useEffect running');
     
+    const cart = CartManager.getInstance();
+    console.log('Got cart instance, visitor ID:', cart.getVisitorId());
+    
+    const updateCartCount = () => {
+      const count = cart.getItemCount();
+      console.log('Updating cart count to:', count);
+      setCartCount(count);
+    };
+    
+    // Initial count
     updateCartCount();
+    
+    // Subscribe to changes
     const unsubscribe = cart.subscribe(updateCartCount);
     
     return unsubscribe;

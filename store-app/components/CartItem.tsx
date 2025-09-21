@@ -11,7 +11,11 @@ export default function CartItem({ item }: CartItemProps) {
   const cart = CartManager.getInstance();
 
   const handleQuantityChange = (newQuantity: number) => {
-    cart.updateQuantity(item.product.id, newQuantity);
+    if (newQuantity < 1) {
+      cart.removeItem(item.product.id);
+    } else {
+      cart.updateQuantity(item.product.id, newQuantity);
+    }
   };
 
   const handleRemove = () => {

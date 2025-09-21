@@ -9,6 +9,7 @@ import { CartItem as CartItemType } from '../../../Lib/types';
 export default function CartPage() {
   const [items, setItems] = useState<CartItemType[]>([]);
   const [total, setTotal] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const cart = CartManager.getInstance();
@@ -16,13 +17,31 @@ export default function CartPage() {
     const updateCart = () => {
       setItems(cart.getItems());
       setTotal(cart.getTotal());
+      setIsLoading(false);
     };
     
-    updateCart();
+    
+
+    // Small delay to ensure cart is properly initialized
+    const timer = setTimeout(updateCart, 100);
     const unsubscribe = cart.subscribe(updateCart);
     
-    return unsubscribe;
+    return () => {
+      clearTimeout(timer);
+      unsubscribe();
+    };
   }, []);
+
+  if (isLoading) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-8 text-center">
+        <h1 className="text-3xl font-bold text-gray-800 mb-6">Your Cart</h1>
+        <div className="bg-white rounded-lg shadow-md p-8">
+          <p className="text-gray-600 text-lg">Loading cart...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (items.length === 0) {
     return (
@@ -79,5 +98,7 @@ export default function CartPage() {
     </div>
   );
 }
+
+
 
 

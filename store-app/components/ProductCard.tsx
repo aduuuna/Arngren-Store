@@ -4,13 +4,17 @@ import Link from 'next/link';
 import { Product } from '../Lib/types';
 import { CartManager } from '../Lib/cart';
 
+console.log('🎯 ProductCard component loaded!');
+
 interface ProductCardProps {
   product: Product;
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
   const handleAddToCart = () => {
+    console.log('Add to cart button clicked for:', product.name);
     const cart = CartManager.getInstance();
+    console.log('Got cart instance');
     cart.addItem(product);
   };
 

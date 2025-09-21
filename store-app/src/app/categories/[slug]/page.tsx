@@ -3,11 +3,12 @@ import ProductCard from '../../../../components/ProductCard';
 import { categories, getProductsByCategory } from '../../../../Lib/products';
 
 interface CategoryPageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
-export default function CategoryPage({ params }: CategoryPageProps) {
-  const category = categories.find(cat => cat.slug === params.slug);
+export default async function CategoryPage({ params }: CategoryPageProps) {
+  const { slug } = await params;
+  const category = categories.find(cat => cat.slug === slug);
   
   if (!category) {
     notFound();

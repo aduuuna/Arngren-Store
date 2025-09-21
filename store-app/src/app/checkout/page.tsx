@@ -9,24 +9,37 @@ export default function CheckoutPage() {
   const [items, setItems] = useState<CartItem[]>([]);
   const [total, setTotal] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
     address: '',
   });
-
+  
   const router = useRouter();
 
   useEffect(() => {
     const cart = CartManager.getInstance();
-    setItems(cart.getItems());
-    setTotal(cart.getTotal());
-
-    // If cart is empty, redirect to cart page
-    if (cart.getItems().length === 0) {
-      router.push('/cart');
-    }
+    
+    const initializeCheckout = () => {
+      const cartItems = cart.getItems();
+      const cartTotal = cart.getTotal();
+      
+      setItems(cartItems);
+      setTotal(cartTotal);
+      setIsLoading(false);
+      
+      // If cart is empty, redirect to cart page
+      if (cartItems.length === 0) {
+        router.push('/cart');
+      }
+    };
+    
+    // Small delay to ensure cart is properly loaded from localStorage
+    const timer = setTimeout(initializeCheckout, 100);
+    
+    return () => clearTimeout(timer);
   }, [router]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -40,10 +53,11 @@ export default function CheckoutPage() {
     e.preventDefault();
     setIsSubmitting(true);
 
+    const cart = CartManager.getInstance();
     const orderData: OrderForm = {
       ...formData,
-      items,
-      total,
+      items: cart.getItems(), // Get fresh cart data
+      total: cart.getTotal(),
     };
 
     try {
@@ -57,7 +71,6 @@ export default function CheckoutPage() {
 
       if (response.ok) {
         // Clear cart and redirect to success page
-        const cart = CartManager.getInstance();
         cart.clearCart();
         alert('Order submitted successfully! We will call you shortly to confirm payment.');
         router.push('/');
@@ -65,16 +78,27 @@ export default function CheckoutPage() {
         alert('Error submitting order. Please try again.');
       }
     } catch (error) {
+      console.error('Error submitting order:', error);
       alert('Error submitting order. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold text-gray-800 mb-8">Checkout</h1>
+        <div className="text-center">Loading checkout...</div>
+      </div>
+    );
+  }
+
   if (items.length === 0) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="text-center">Loading...</div>
+        <h1 className="text-3xl font-bold text-gray-800 mb-8">Checkout</h1>
+        <div className="text-center">Redirecting to cart...</div>
       </div>
     );
   }
@@ -82,12 +106,12 @@ export default function CheckoutPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-gray-800 mb-8">Checkout</h1>
-
+      
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Order Summary */}
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-xl font-semibold text-gray-800 mb-4">Order Summary</h2>
-
+          
           <div className="space-y-3 mb-4">
             {items.map((item) => (
               <div key={item.product.id} className="flex justify-between items-center">
@@ -103,7 +127,7 @@ export default function CheckoutPage() {
               </div>
             ))}
           </div>
-
+          
           <div className="border-t pt-4">
             <div className="flex justify-between items-center text-lg font-bold">
               <span>Total:</span>
@@ -112,54 +136,90 @@ export default function CheckoutPage() {
           </div>
         </div>
 
-        {/* Checkout Form */}
-        <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-6 space-y-4">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Billing Details</h2>
+        {/* Customer Information Form */}
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Customer Information</h2>
+          
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                Full Name *
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                required
+                value={formData.name}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
 
-          <input
-            type="text"
-            name="name"
-            placeholder="Full Name"
-            value={formData.name}
-            onChange={handleInputChange}
-            className="w-full p-2 border rounded"
-            required
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Email Address"
-            value={formData.email}
-            onChange={handleInputChange}
-            className="w-full p-2 border rounded"
-            required
-          />
-          <input
-            type="tel"
-            name="phone"
-            placeholder="Phone Number"
-            value={formData.phone}
-            onChange={handleInputChange}
-            className="w-full p-2 border rounded"
-            required
-          />
-          <textarea
-            name="address"
-            placeholder="Delivery Address"
-            value={formData.address}
-            onChange={handleInputChange}
-            className="w-full p-2 border rounded"
-            required
-          />
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                Email Address *
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                required
+                value={formData.email}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
 
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 disabled:opacity-50"
-          >
-            {isSubmitting ? 'Placing Order...' : 'Place Order'}
-          </button>
-        </form>
+            <div>
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                Phone Number *
+              </label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                required
+                value={formData.phone}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="e.g., +233 123 456 789"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
+                Delivery Address *
+              </label>
+              <textarea
+                id="address"
+                name="address"
+                required
+                rows={3}
+                value={formData.address}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter your complete delivery address"
+              />
+            </div>
+
+            <div className="bg-blue-50 p-4 rounded-md">
+              <h3 className="font-semibold text-blue-800 mb-2">Payment Process</h3>
+              <p className="text-sm text-blue-700">
+                After submitting this order, we will call you within 15 minutes to confirm your order 
+                and arrange payment. We accept mobile money, bank transfer, or cash on delivery.
+              </p>
+            </div>
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full bg-green-600 text-white py-3 px-6 rounded-md font-semibold hover:bg-green-700 disabled:bg-gray-400 transition-colors"
+            >
+              {isSubmitting ? 'Submitting Order...' : 'Submit Order'}
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );
