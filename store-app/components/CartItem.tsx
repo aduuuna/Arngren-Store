@@ -34,6 +34,8 @@ export default function CartItem({ item }: CartItemProps) {
           <Image 
             src={item.product.image} 
             alt={item.product.name}
+            width={400}
+            height={300}
             className="w-16 h-16 object-cover rounded-lg bg-slate-100"
           />
           <div className="flex-1 min-w-0">
@@ -90,6 +92,8 @@ export default function CartItem({ item }: CartItemProps) {
         <Image 
           src={item.product.image} 
           alt={item.product.name}
+          width={400}
+          height={300}
           className="w-20 h-20 object-cover rounded-lg bg-slate-100"
         />
         

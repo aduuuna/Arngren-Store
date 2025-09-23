@@ -287,6 +287,8 @@ export default function CheckoutPage() {
                       <Image 
                         src={item.product.image} 
                         alt={item.product.name}
+                        width={400}
+                        height={300}
                         className="w-12 h-12 object-cover rounded-md bg-white shadow-sm"
                       />
                       <div className="flex-1 min-w-0">
@@ -355,7 +357,7 @@ export default function CheckoutPage() {
         </div>
 
         {/* Enhanced Mobile Sticky Submit Button */}
-        <div className="sm:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-4 shadow-2xl backdrop-blur-sm bg-opacity-95">
+        <div className="sm:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-4 shadow-2xl backdrop-blur-sm bg-opacity-0">
           <button
             type="submit"
             form="checkout-form"

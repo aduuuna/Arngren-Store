@@ -26,7 +26,7 @@ export default function HomePage() {
       {/* Hero Section with Animation */}
       <div className="rmx-4 mt-6 mb-12 relative bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 text-white overflow-hidden rounded-2xl shadow-2xl md:mx-8 lg:mx-12">
         {/* Animated background elements */}
-        <div className="absolute inset-0 opacity-20">
+        <div className="absolute inset-0">
           <div className="floating-element absolute top-20 left-10 w-20 h-20 bg-blue-400 rounded-full blur-xl animate-pulse"></div>
           <div className="floating-element absolute top-40 right-20 w-32 h-32 bg-purple-400 rounded-full blur-2xl animate-bounce" style={{ animationDelay: '2s' }}></div>
           <div className="floating-element absolute bottom-20 left-1/3 w-16 h-16 bg-green-400 rounded-full blur-lg animate-pulse" style={{ animationDelay: '4s' }}></div>

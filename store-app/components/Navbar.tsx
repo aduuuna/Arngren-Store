@@ -12,6 +12,7 @@ export default function Navbar() {
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
   const categoriesRef = useRef<HTMLDivElement>(null);
   const categoriesButtonRef = useRef<HTMLButtonElement>(null);
+  const mobileCategoriesButtonRef = useRef<HTMLButtonElement>(null); // Add ref for mobile button
 
   useEffect(() => {
     console.log('Navbar useEffect running');
@@ -41,7 +42,9 @@ export default function Navbar() {
         categoriesRef.current && 
         !categoriesRef.current.contains(event.target as Node) &&
         categoriesButtonRef.current &&
-        !categoriesButtonRef.current.contains(event.target as Node)
+        !categoriesButtonRef.current.contains(event.target as Node) &&
+        mobileCategoriesButtonRef.current &&
+        !mobileCategoriesButtonRef.current.contains(event.target as Node) // Include mobile button
       ) {
         setIsCategoriesOpen(false);
       }
@@ -60,7 +63,7 @@ export default function Navbar() {
   };
 
   // Handle keyboard navigation
-  const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>, action: { (): void; (): void; }) => {
+  const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>, action: () => void) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       action();
@@ -97,7 +100,7 @@ export default function Navbar() {
               >
                 Categories
                 <svg 
-                  className={`ml-1 h-4 w-4 transition-transform duration-200 ${isCategoriesOpen ? 'rotate-180' : ''}`} 
+                  className={`ml-1 h-4 w-4 transition-transform duration-200 ${isCategoriesOpen ? 'rotate-180' : 'rotate-0'}`} 
                   fill="none" 
                   viewBox="0 0 24 24" 
                   stroke="currentColor"
@@ -115,7 +118,7 @@ export default function Navbar() {
                   aria-orientation="vertical"
                 >
                   <div className="py-2">
-                    {categories.map((category, index) => (
+                    {categories.map((category) => (
                       <Link
                         key={category.slug}
                         href={`/categories/${category.slug}`}
@@ -146,29 +149,45 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Mobile menu button with hamburger/close animation */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden relative w-8 h-8 flex flex-col justify-center items-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 rounded"
-            aria-expanded={isMenuOpen}
-            aria-label="Toggle navigation menu"
-          >
-            <span 
-              className={`block w-6 h-0.5 bg-gray-600 transition-all duration-300 ${
-                isMenuOpen ? 'rotate-45 translate-y-1' : '-translate-y-1'
-              }`}
-            ></span>
-            <span 
-              className={`block w-6 h-0.5 bg-gray-600 transition-all duration-300 ${
-                isMenuOpen ? 'opacity-0' : 'opacity-100'
-              }`}
-            ></span>
-            <span 
-              className={`block w-6 h-0.5 bg-gray-600 transition-all duration-300 ${
-                isMenuOpen ? '-rotate-45 -translate-y-1' : 'translate-y-1'
-              }`}
-            ></span>
-          </button>
+          {/* Mobile cart + hamburger */}
+          <div className="md:hidden flex items-center space-x-4">
+            {/* Mobile Cart - Always visible */}
+            <Link
+              href="/cart"
+              className="relative text-gray-600 hover:text-gray-800 transition-colors"
+            >
+              🛒
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center font-medium">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
+
+            {/* Hamburger menu button */}
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="relative w-8 h-8 flex flex-col justify-center items-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 rounded"
+              aria-expanded={isMenuOpen}
+              aria-label="Toggle navigation menu"
+            >
+              <span 
+                className={`block w-6 h-0.5 bg-gray-600 transition-all duration-300 ${
+                  isMenuOpen ? 'rotate-45 translate-y-1' : '-translate-y-1'
+                }`}
+              ></span>
+              <span 
+                className={`block w-6 h-0.5 bg-gray-600 transition-all duration-300 ${
+                  isMenuOpen ? 'opacity-0' : 'opacity-100'
+                }`}
+              ></span>
+              <span 
+                className={`block w-6 h-0.5 bg-gray-600 transition-all duration-300 ${
+                  isMenuOpen ? '-rotate-45 -translate-y-1' : 'translate-y-1'
+                }`}
+              ></span>
+            </button>
+          </div>
         </div>
 
         {/* Mobile Menu with slide animation */}
@@ -186,12 +205,17 @@ export default function Navbar() {
             
             {/* Categories toggle for mobile */}
             <button
-              onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
+              ref={mobileCategoriesButtonRef} // Add the ref here
+              onClick={() => {
+                console.log('Mobile categories clicked, current state:', isCategoriesOpen);
+                setIsCategoriesOpen(!isCategoriesOpen);
+                console.log('Setting to:', !isCategoriesOpen);
+              }}
               className="w-full flex items-center justify-between py-3 px-2 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded transition-colors"
             >
               Categories
               <svg 
-                className={`h-4 w-4 transition-transform duration-200 ${isCategoriesOpen ? 'rotate-180' : ''}`} 
+                className={`h-4 w-4 transition-transform duration-200 ${isCategoriesOpen ? 'rotate-180' : 'rotate-0'}`} 
                 fill="none" 
                 viewBox="0 0 24 24" 
                 stroke="currentColor"
@@ -218,19 +242,6 @@ export default function Navbar() {
                 ))}
               </div>
             </div>
-            
-            <Link 
-              href="/cart" 
-              onClick={() => setIsMenuOpen(false)}
-              className="flex items-center justify-between py-3 px-2 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded transition-colors"
-            >
-              <span>🛒 Cart</span>
-              {cartCount > 0 && (
-                <span className="bg-red-500 text-white rounded-full text-xs px-2 py-1 font-medium">
-                  {cartCount}
-                </span>
-              )}
-            </Link>
           </div>
         </div>
       </div>

@@ -143,6 +143,8 @@ export default function ProductPage({ params }: ProductPageProps) {
               <Image 
                 src={product.image} 
                 alt={product.name}
+                width={400}
+                height={300}
                 onLoad={() => setImageLoaded(true)}
                 className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-105 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
               />

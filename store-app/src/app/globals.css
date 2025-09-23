@@ -2,7 +2,7 @@
 
 @theme inline {
   --color-background: #ffffff;
-  --color-foreground: #171717;
+  --color-foreground: rgb(23, 23, 23);
 }
 
 body {
@@ -11,12 +11,8 @@ body {
   font-family: system-ui, sans-serif;
 }
 
-@supports not (backdrop-filter: blur()) {
-  .backdrop-blur-sm {
-    background-color: rgba(255, 255, 255, 0.8) !important;
-    backdrop-filter: none !important;
-  }
-}
+
+
 
 /* Updated font smoothing for better iOS compatibility */
 * {
@@ -58,14 +54,7 @@ html {
 }
 
 /* Additional iOS Safari fixes */
-@media screen and (-webkit-min-device-pixel-ratio: 1) {
-  /* Force proper color rendering on iOS */
-  .text-gray-500,
-  .text-gray-600,
-  .text-gray-700 {
-    color: rgb(var(--tw-color-opacity, 1));
-  }
-}
+
 
 /* Prevent color shifting on iOS dark mode detection */
 @media (prefers-color-scheme: light) {

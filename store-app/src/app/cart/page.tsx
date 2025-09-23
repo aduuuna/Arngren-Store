@@ -123,7 +123,7 @@ export default function CartPage() {
                 >
                   <span className="flex items-center justify-center">
                     <svg
-                      className="w-4 h-4 mr-2"
+                      className="w-4 h-4 mr-2 "
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
