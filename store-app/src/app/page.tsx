@@ -180,7 +180,7 @@ export default function HomePage() {
 
 
         {/* Enhanced Footer */}
-        <footer className="bg-white/40 backdrop-blur-sm border border-white/20 text-slate-700 py-8 rounded-2xl shadow-sm">
+        <footer className="bg-white/90 border border-white/20 text-slate-700 py-8 rounded-2xl shadow-sm">
           <div className="max-w-7xl mx-auto px-6 flex flex-col items-center gap-6 md:flex-row md:justify-between">
             <div className="text-center md:text-left">
               <p className="font-bold text-lg">© 2025 Arngren Store</p>
