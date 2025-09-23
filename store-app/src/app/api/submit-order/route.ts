@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate unique order ID
-    const orderId = `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 5).toUpperCase()}`;
+    const orderId = Math.random().toString(36).substr(2, 9).toUpperCase();
     
     // Create email content for admin
     const adminEmailContent = `

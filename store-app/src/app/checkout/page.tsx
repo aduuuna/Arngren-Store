@@ -11,6 +11,7 @@ export default function CheckoutPage() {
   const [total, setTotal] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(''); // Add error state
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -48,11 +49,18 @@ export default function CheckoutPage() {
       ...formData,
       [e.target.name]: e.target.value,
     });
+    // Clear error when user starts typing
+    if (error) setError('');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Prevent double submission
+    if (isSubmitting) return;
+    
     setIsSubmitting(true);
+    setError(''); // Clear any previous errors
 
     const cart = CartManager.getInstance();
     const orderData: OrderForm = {
@@ -70,19 +78,22 @@ export default function CheckoutPage() {
         body: JSON.stringify(orderData),
       });
 
+      const responseData = await response.json();
+
       if (response.ok) {
         // Clear cart and redirect to success page
         cart.clearCart();
         alert('Order submitted successfully! We will call you shortly to confirm payment.');
         router.push('/');
       } else {
-        const errorData = await response.json();
-        alert(`Error: ${errorData.message || 'Please try again.'}`);
+        // Show validation or server errors
+        setError(responseData.message || 'Please check your information and try again.');
       }
     } catch (error) {
       console.error('Error submitting order:', error);
-      alert('Network error. Please check your connection and try again.');
+      setError('Network error. Please check your connection and try again.');
     } finally {
+      // Always reset submitting state
       setIsSubmitting(false);
     }
   };
@@ -151,7 +162,19 @@ export default function CheckoutPage() {
                 <h2 className="text-xl font-bold text-slate-900">Customer Information</h2>
               </div>
               
-              <form onSubmit={handleSubmit} className="space-y-5">
+              {/* Error Message */}
+              {error && (
+                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <div className="flex items-center">
+                    <svg className="w-5 h-5 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p className="text-red-700 text-sm font-medium">{error}</p>
+                  </div>
+                </div>
+              )}
+              
+              <form id="checkout-form" onSubmit={handleSubmit} className="space-y-5">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="sm:col-span-2">
                     <label htmlFor="name" className="block text-sm font-semibold text-slate-700 mb-2">
@@ -231,7 +254,7 @@ export default function CheckoutPage() {
                       <div className="text-sm text-green-800 space-y-2">
                         <div className="flex items-center">
                           <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                          <p>We&apos;ll call you within <strong>2-4 hours</strong> to confirm your order</p>
+                          <p>We'll call you within <strong>2-4 hours</strong> to confirm your order</p>
                         </div>
                         <div className="flex items-center">
                           <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
@@ -356,13 +379,12 @@ export default function CheckoutPage() {
           </div>
         </div>
 
-        {/* Enhanced Mobile Sticky Submit Button */}
-        <div className="sm:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-4 shadow-2xl backdrop-blur-sm bg-opacity-0">
+        {/* Enhanced Mobile Sticky Submit Button - FIXED */}
+        <div className="sm:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-4 shadow-2xl backdrop-blur-sm bg-opacity-95">
           <button
             type="submit"
             form="checkout-form"
             disabled={isSubmitting}
-            onClick={handleSubmit}
             className="w-full bg-gradient-to-r from-green-600 to-green-700 text-white py-4 px-6 rounded-xl font-bold hover:from-green-700 hover:to-green-800 disabled:from-slate-400 disabled:to-slate-400 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center shadow-lg active:transform active:scale-95"
           >
             {isSubmitting ? (
