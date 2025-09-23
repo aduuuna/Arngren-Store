@@ -12,3 +12,25 @@ body {
   color: var(--color-foreground);
   font-family: system-ui, sans-serif;
 }
+
+@supports not (backdrop-filter: blur()) {
+  .backdrop-blur-sm {
+    background-color: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: none !important;
+  }
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  color-scheme: light;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 2) {
+  .bg-gradient-to-br {
+    background-attachment: scroll;
+  }
+}
