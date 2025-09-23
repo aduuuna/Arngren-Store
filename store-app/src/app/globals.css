@@ -5,8 +5,6 @@
   --color-foreground: #171717;
 }
 
-
-
 body {
   background: var(--color-background);
   color: var(--color-foreground);
@@ -20,17 +18,58 @@ body {
   }
 }
 
+/* Updated font smoothing for better iOS compatibility */
 * {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: subpixel-antialiased;
+  -moz-osx-font-smoothing: auto;
+  /* Force hardware acceleration for better rendering */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+/* iOS-specific fixes */
+@supports (-webkit-touch-callout: none) {
+  * {
+    -webkit-font-smoothing: auto;
+    -webkit-text-stroke: 0.01em transparent;
+  }
+  
+  /* Ensure proper color rendering on iOS */
+  body {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
 }
 
 html {
   color-scheme: light;
+  /* Better text rendering */
+  text-rendering: optimizeLegibility;
 }
 
+/* Enhanced gradient handling for iOS */
 @media screen and (-webkit-min-device-pixel-ratio: 2) {
   .bg-gradient-to-br {
     background-attachment: scroll;
+    /* Force proper gradient rendering on high-DPI iOS devices */
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+  }
+}
+
+/* Additional iOS Safari fixes */
+@media screen and (-webkit-min-device-pixel-ratio: 1) {
+  /* Force proper color rendering on iOS */
+  .text-gray-500,
+  .text-gray-600,
+  .text-gray-700 {
+    color: rgb(var(--tw-color-opacity, 1));
+  }
+}
+
+/* Prevent color shifting on iOS dark mode detection */
+@media (prefers-color-scheme: light) {
+  :root {
+    color-scheme: light only;
   }
 }
