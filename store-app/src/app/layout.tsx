@@ -3,8 +3,8 @@ import './globals.css';
 import Navbar from '../../components/Navbar';
 
 export const metadata: Metadata = {
-  title: 'MediTools Store',
-  description: 'Professional medical supplies, tools, and equipment',
+  title: 'Arngren Store',
+  description: 'Discover cuuting-edge technology, smart home solutions, and professional equipment all in one place',
 };
 
 export default function RootLayout({

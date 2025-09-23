@@ -2,6 +2,7 @@
 
 import { CartItem as CartItemType } from '../Lib/types';
 import { CartManager } from '../Lib/cart';
+import Image from 'next/image';
 
 interface CartItemProps {
   item: CartItemType;
@@ -30,7 +31,7 @@ export default function CartItem({ item }: CartItemProps) {
       <div className="sm:hidden">
         {/* Top Row: Image and Product Info */}
         <div className="flex gap-3 mb-3">
-          <img 
+          <Image 
             src={item.product.image} 
             alt={item.product.name}
             className="w-16 h-16 object-cover rounded-lg bg-slate-100"
@@ -86,7 +87,7 @@ export default function CartItem({ item }: CartItemProps) {
 
       {/* Desktop Layout - Horizontal */}
       <div className="hidden sm:flex sm:items-center sm:gap-6">
-        <img 
+        <Image 
           src={item.product.image} 
           alt={item.product.name}
           className="w-20 h-20 object-cover rounded-lg bg-slate-100"

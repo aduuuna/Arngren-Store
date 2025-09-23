@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Product } from '../Lib/types';
 import { CartManager } from '../Lib/cart';
+import Image from 'next/image';
 
 console.log('🎯 ProductCard component loaded!');
 
@@ -21,7 +22,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
       <Link href={`/products/${product.id}`}>
-        <img 
+        <Image 
           src={product.image} 
           alt={product.name}
           className="w-full h-48 object-cover hover:scale-105 transition-transform"
