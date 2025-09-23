@@ -5,12 +5,7 @@
   --color-foreground: #171717;
 }
 
-@media (prefers-color-scheme: dark) {
-  @theme inline {
-    --color-background: #0a0a0a;
-    --color-foreground: #ededed;
-  }
-}
+
 
 body {
   background: var(--color-background);
