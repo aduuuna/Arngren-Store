@@ -22,10 +22,10 @@ export async function sendOrderEmail(orderData: any, emailContent: string, order
           <div style="padding: 24px;">
             <h2 style="margin: 0 0 16px 0; font-size: 18px; font-weight: 600; color: #111827;">Customer Information</h2>
             <div style="background-color: #f9fafb; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb;">
-              <p style="margin: 0 0 8px 0; font-size: 14px;"><strong>Name:</strong> ${orderData.name}</p>
+              <p style="margin: 0 0 8px 0; font-size: 14px, color: #111827;"><strong>Name:</strong> ${orderData.name}</p>
               <p style="margin: 0 0 8px 0; font-size: 14px;"><strong>Email:</strong> <a href="mailto:${orderData.email}" style="color: #2563eb; text-decoration: none;">${orderData.email}</a></p>
               <p style="margin: 0 0 8px 0; font-size: 14px;"><strong>Phone:</strong> <a href="tel:${orderData.phone}" style="color: #2563eb; text-decoration: none;">${orderData.phone}</a></p>
-              <p style="margin: 0; font-size: 14px;"><strong>Address:</strong> ${orderData.address}</p>
+              <p style="margin: 0; font-size: 14px, color: #111827;"><strong>Address:</strong> ${orderData.address}</p>
             </div>
           </div>
 

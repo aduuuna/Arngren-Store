@@ -254,7 +254,7 @@ export default function CheckoutPage() {
                       <div className="text-sm text-green-800 space-y-2">
                         <div className="flex items-center">
                           <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                          <p>We'll call you within <strong>2-4 hours</strong> to confirm your order</p>
+                          <p>We&apos;ll call you within <strong>2-4 hours</strong> to confirm your order</p>
                         </div>
                         <div className="flex items-center">
                           <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
